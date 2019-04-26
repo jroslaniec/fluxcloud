@@ -1,6 +1,7 @@
--e Release v0.4.0:
+Release v0.4.0:
 
--e 4e939bb (Jędrzej Rosłaniec): Update Dockerfile; Add basic helm chart; Change slack colors
+4e939bb (Jędrzej Rosłaniec): Update Dockerfile; Add basic helm chart; Change slack colors
+
 008a6bf (Justin Barrick): tracing with opencensus
 
 Release v0.4.1:
