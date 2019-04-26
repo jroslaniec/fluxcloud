@@ -1,3 +1,8 @@
+Release v0.4.1:
+
+d91a43c (jroslaniec-acaisoft): Release v0.4.1
+cd6be80 (jroslaniec-acaisoft): Add basic helm chart
+
 Release v0.3.6:
 
 421cfa2 (Justin Barrick): increase timeout for slack notifications.

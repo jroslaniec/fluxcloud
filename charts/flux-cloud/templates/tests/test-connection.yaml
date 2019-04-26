@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "flux-cloud.fullname" . }}-test-connection"
+  labels:
+    app.kubernetes.io/name: {{ include "flux-cloud.name" . }}
+    helm.sh/chart: {{ include "flux-cloud.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "flux-cloud.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

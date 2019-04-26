@@ -80,20 +80,20 @@ func (s *Slack) Send(c context.Context, client *http.Client, message msg.Message
 
 		log.Print(string(b.Bytes()))
 
-		req, _ := http.NewRequest("POST", s.Url, b)
-		req.Header.Set("Content-Type", "application/json")
-		req = req.WithContext(c)
-
-		res, err := client.Do(req)
-		if err != nil {
-			log.Print("Could not post to slack:", err)
-			return err
-		}
-
-		if res.StatusCode != 200 {
-			log.Print("Could not post to slack, status: ", res.Status)
-			return fmt.Errorf("Could not post to slack, status: %d", res.StatusCode)
-		}
+		//req, _ := http.NewRequest("POST", s.Url, b)
+		//req.Header.Set("Content-Type", "application/json")
+		//req = req.WithContext(c)
+		//
+		//res, err := client.Do(req)
+		//if err != nil {
+		//	log.Print("Could not post to slack:", err)
+		//	return err
+		//}
+		//
+		//if res.StatusCode != 200 {
+		//	log.Print("Could not post to slack, status: ", res.Status)
+		//	return fmt.Errorf("Could not post to slack, status: %d", res.StatusCode)
+		//}
 	}
 
 	return nil
@@ -113,6 +113,9 @@ func (s *Slack) FormatLink(link string, name string) string {
 func (s *Slack) NewSlackMessage(message msg.Message) []SlackMessage {
 	var messages []SlackMessage
 
+	messageColor := getMessageColor(&message)
+	log.Printf("Message color: %s, level: %s\n", messageColor, message.Event.LogLevel)
+
 	for _, channel := range s.determineChannels(message) {
 		slackMessage := SlackMessage{
 			Channel:   channel,
@@ -120,7 +123,8 @@ func (s *Slack) NewSlackMessage(message msg.Message) []SlackMessage {
 			Username:  s.Username,
 			Attachments: []SlackAttachment{
 				SlackAttachment{
-					Color:     "#4286f4",
+					//Color:     "#4286f4",
+					Color:     messageColor,
 					TitleLink: message.TitleLink,
 					Title:     message.Title,
 					Text:      message.Body,
@@ -183,4 +187,18 @@ func appendIfMissing(slice []string, s string) []string {
 		}
 	}
 	return append(slice, s)
+}
+
+func getMessageColor(m *msg.Message) string {
+	switch m.Event.LogLevel {
+	case "debug":
+		return "#acdcff"
+	case "info":
+		return "#6f5cff"
+	case "warn":
+		return "#e3a84a"
+	case "error":
+		return "#a11b28"
+	}
+	return "#4286f4"
 }
